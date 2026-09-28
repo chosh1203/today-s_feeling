@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>바 디자인 스튜디오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F5F0E6;
+    --track:#E4DCC8;
+    --ink:#201F1D;
+    --accent:#23305E;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ivory);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:64px 24px;
+  }
+  #introLine{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:1rem;
+    letter-spacing:.02em;
+    opacity:.6;
+    margin:0 0 8px;
+  }
+  #bigLabel{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(2.2rem, 7vw, 4.5rem);
+    line-height:1.05;
+    text-align:center;
+    margin:0 0 48px;
+    max-width:14ch;
+    word-break:keep-all;
+  }
+  .bar-wrap{
+    width:100%;
+    max-width:520px;
+  }
+  #barTrack{
+    width:100%;
+    background:var(--track);
+    border-radius:999px;
+    overflow:hidden;
+    height:28px;
+  }
+  #barFill{
+    height:100%;
+    width:65%;
+    background:var(--accent);
+    border-radius:999px;
+    transition:width .15s ease, background .2s ease;
+  }
+  #fillPercent{
+    margin-top:10px;
+    font-size:0.85rem;
+    letter-spacing:.02em;
+    opacity:.65;
+    text-align:right;
+  }
+  .controls{
+    width:100%;
+    max-width:520px;
+    margin-top:56px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+  .row{
+    display:grid;
+    grid-template-columns:88px 1fr;
+    align-items:center;
+    gap:16px;
+  }
+  .row.emotion-row{
+    align-items:start;
+  }
+  .row label{
+    font-size:0.85rem;
+    opacity:.7;
+    padding-top:6px;
+  }
+  input[type="text"]{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:1rem;
+    padding:10px 12px;
+    border:1px solid var(--ink);
+    border-radius:8px;
+    background:transparent;
+    color:var(--ink);
+  }
+  input[type="color"]{
+    width:44px;
+    height:32px;
+    border:1px solid var(--ink);
+    border-radius:6px;
+    padding:0;
+    background:none;
+    cursor:pointer;
+  }
+  input[type="range"]{
+    -webkit-appearance:none;
+    width:100%;
+    height:2px;
+    background:var(--ink);
+    opacity:.35;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:var(--accent);
+    cursor:pointer;
+    margin-top:-7px;
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:16px;
+    height:16px;
+    border:none;
+    border-radius:50%;
+    background:var(--accent);
+    cursor:pointer;
+  }
+  .emotions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .emotions button{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:0.85rem;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+  <p id="introLine">오늘의 기분은</p>
+  <h1 id="bigLabel">설렘 가득</h1>
+
+  <div class="bar-wrap">
+    <div id="barTrack">
+      <div id="barFill"></div>
+    </div>
+    <div id="fillPercent">65%</div>
+  </div>
+
+  <div class="controls">
+    <div class="row">
+      <label>내용</label>
+      <input type="text" id="labelText" value="설렘 가득">
+    </div>
+    <div class="row emotion-row">
+      <label>감정</label>
+      <div class="emotions">
+        <button id="joyBtn">기쁨</button>
+        <button id="calmBtn">편안</button>
+        <button id="thrillBtn">설렘</button>
+        <button id="angerBtn">분노</button>
+        <button id="sadBtn">슬픔</button>
+        <button id="anxietyBtn">불안</button>
+        <button id="disgustBtn">불쾌</button>
+      </div>
+    </div>
+    <div class="row">
+      <label>색상</label>
+      <input type="color" id="barColor" value="#23305e">
+    </div>
+    <div class="row">
+      <label>채움</label>
+      <input type="range" id="fillSlider" min="0" max="100" value="65">
+    </div>
+    <div class="row">
+      <label>두께</label>
+      <input type="range" id="heightSlider" min="12" max="60" value="28">
+    </div>
+  </div>
+
+  <script>
+
+    labelText.oninput = function(){
+      bigLabel.innerHTML = labelText.value;
+
+      if(labelText.value == "기쁨"){
+        barFill.style.background = "#E03A3E";
+        barColor.value = "#E03A3E";
+      }else if(labelText.value == "편안"){
+        barFill.style.background = "#F2822B";
+        barColor.value = "#F2822B";
+      }else if(labelText.value == "설렘"){
+        barFill.style.background = "#F4C430";
+        barColor.value = "#F4C430";
+      }else if(labelText.value == "분노"){
+        barFill.style.background = "#3FA34D";
+        barColor.value = "#3FA34D";
+      }else if(labelText.value == "슬픔"){
+        barFill.style.background = "#2E6FDE";
+        barColor.value = "#2E6FDE";
+      }else if(labelText.value == "불안"){
+        barFill.style.background = "#23305E";
+        barColor.value = "#23305E";
+      }else if(labelText.value == "불쾌"){
+        barFill.style.background = "#7B4FA0";
+        barColor.value = "#7B4FA0";
+      }
+    }
+
+    barColor.oninput = function(){
+      barFill.style.background = barColor.value;
+    }
+
+    fillSlider.oninput = function(){
+      barFill.style.width = fillSlider.value + "%";
+      fillPercent.innerHTML = fillSlider.value + "%";
+    }
+
+    heightSlider.oninput = function(){
+      barTrack.style.height = heightSlider.value + "px";
+    }
+
+    // ---- 감정 버튼: 빨주노초파남보 ----
+    joyBtn.onclick = function(){
+      barFill.style.background = "#E03A3E";
+      barColor.value = "#E03A3E";
+    }
+    calmBtn.onclick = function(){
+      barFill.style.background = "#F2822B";
+      barColor.value = "#F2822B";
+    }
+    thrillBtn.onclick = function(){
+      barFill.style.background = "#F4C430";
+      barColor.value = "#F4C430";
+    }
+    angerBtn.onclick = function(){
+      barFill.style.background = "#3FA34D";
+      barColor.value = "#3FA34D";
+    }
+    sadBtn.onclick = function(){
+      barFill.style.background = "#2E6FDE";
+      barColor.value = "#2E6FDE";
+    }
+    anxietyBtn.onclick = function(){
+      barFill.style.background = "#23305E";
+      barColor.value = "#23305E";
+    }
+    disgustBtn.onclick = function(){
+      barFill.style.background = "#7B4FA0";
+      barColor.value = "#7B4FA0";
+    }
+
+  </script>
+</body>
+</html>
